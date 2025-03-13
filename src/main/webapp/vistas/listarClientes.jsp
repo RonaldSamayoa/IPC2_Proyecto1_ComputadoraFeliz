@@ -38,10 +38,9 @@
             <td><%= cliente.getNombre() %></td>
             <td><%= cliente.getDireccion() %></td>
             <td>
-                <a href="editarCliente.jsp?id=<%= cliente.getId_cliente() %>">Editar</a> |
-                <a href="eliminarCliente?id=<%= cliente.getId_cliente() %>" onclick="return confirm('¿Seguro que deseas eliminar este cliente?');">Eliminar</a>
-            </td>
-        </tr>
+            <a href="../ServletCliente?accion=eliminar&id=<%= cliente.getId_cliente() %>" onclick="return confirm('¿Seguro que deseas eliminar este cliente?');">Eliminar</a>
+        </td>
+    </tr>
         <%
             }
         %>

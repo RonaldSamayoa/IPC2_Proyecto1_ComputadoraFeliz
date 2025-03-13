@@ -52,16 +52,28 @@ public class ServletCliente extends HttpServlet {
     }
 
     private void registrarCliente(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        String nit = request.getParameter("nit");
-        String nombre = request.getParameter("nombre");
-        String direccion = request.getParameter("direccion");
+        throws ServletException, IOException {
+    int idCliente = Integer.parseInt(request.getParameter("id_cliente"));
+    String nit = request.getParameter("nit");
+    String nombre = request.getParameter("nombre");
+    String direccion = request.getParameter("direccion");
 
-        Cliente cliente = new Cliente(0, nit, nombre, direccion);
-        clienteDAO.agregarCliente(cliente);
-
-        response.sendRedirect("ServletCliente");
+    // Verificar si el ID ya existe
+    if (clienteDAO.existeCliente(idCliente)) {
+        response.sendRedirect("jsp/error.jsp?mensaje=El ID del cliente ya existe");
+        return;
     }
+
+    // Crear el objeto Cliente con el ID proporcionado
+    Cliente cliente = new Cliente(idCliente, nit, nombre, direccion);
+    boolean registrado = clienteDAO.agregarCliente(cliente);
+
+    if (registrado) {
+        response.sendRedirect("ServletCliente");
+    } else {
+        response.sendRedirect("jsp/error.jsp?mensaje=No se pudo registrar el cliente");
+    }
+}
 
     private void eliminarCliente(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

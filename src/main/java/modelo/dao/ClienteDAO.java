@@ -46,7 +46,22 @@ public class ClienteDAO {
         }
         return lista;
     }
-
+    
+    public boolean existeCliente(int idCliente) {
+        String sql = "SELECT COUNT(*) AS count FROM Cliente WHERE id_cliente = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, idCliente);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("count") > 0;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
     public boolean eliminarCliente(int id) {
         String sql = "DELETE FROM Cliente WHERE id_cliente = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {

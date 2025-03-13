@@ -56,6 +56,5 @@ public class Componente {
         }
         this.cantidad = cantidad;
     }
-
 }
 

@@ -5,9 +5,6 @@
 --%>
 
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="modelo.Cliente" %>
-<%@ page import="modelo.dao.ClienteDAO" %>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,9 +15,12 @@
 <body>
     <h2>Registrar Cliente</h2>
 
-    <form action="../ClienteServlet" method="post">
+    <form action="../ServletCliente" method="post">
         <input type="hidden" name="accion" value="registrar">
         
+        <label>ID Cliente:</label>
+        <input type="number" name="id_cliente" required><br>
+
         <label>NIT:</label>
         <input type="text" name="nit" required><br>
 
