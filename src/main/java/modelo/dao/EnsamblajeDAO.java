@@ -47,6 +47,19 @@ public class EnsamblajeDAO {
         return lista;
     }
 
+    public int obtenerUltimoId() {
+        String sql = "SELECT MAX(id_ensamblaje) AS max_id FROM Ensamblaje";
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            if (rs.next()) {
+                return rs.getInt("max_id");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0; // Si no hay registros, empezamos desde 0
+    }
+    
     public boolean eliminarEnsamblaje(int id) {
         String sql = "DELETE FROM Ensamblaje WHERE id_ensamblaje = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {

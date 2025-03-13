@@ -19,9 +19,9 @@
 <body>
     <h2>Registrar Devolución</h2>
 
-    <form action="ServletDevolucion" method="post">
+    <form action="../ServletDevolucion" method="post">
         <input type="hidden" name="accion" value="registrar">
-        
+
         <label>Venta Asociada:</label>
         <select name="id_venta" required>
             <%
@@ -35,8 +35,8 @@
             %>
         </select><br>
 
-        <label>Motivo:</label>
-        <textarea name="motivo" required></textarea><br>
+        <label>Pérdida:</label>
+        <input type="number" step="0.01" name="perdida" required><br>
 
         <label>Fecha de Devolución:</label>
         <input type="date" name="fecha_devolucion" required><br>

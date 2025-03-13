@@ -38,7 +38,6 @@
             <td><%= dev.getPerdida() %></td>
             <td><%= dev.getId_venta() %></td>
             <td>
-                <a href="editarDevolucion.jsp?id=<%= dev.getId_devolucion() %>">Editar</a> |
                 <a href="eliminarDevolucion?id=<%= dev.getId_devolucion() %>" onclick="return confirm('¿Seguro que deseas eliminar esta devolución?');">Eliminar</a>
             </td>
         </tr>

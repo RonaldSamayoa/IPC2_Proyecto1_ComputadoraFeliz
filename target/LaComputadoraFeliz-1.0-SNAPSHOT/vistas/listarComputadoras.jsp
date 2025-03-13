@@ -39,9 +39,8 @@
             <td><%= comp.getPrecio_venta() %></td>
             <td><%= comp.getFecha_ensamblaje() %></td>
             <td><%= comp.getId_usuario() %></td>
-            <td>
-                <a href="editarComputadora.jsp?id=<%= comp.getId_computadora() %>">Editar</a> |
-                <a href="eliminarComputadora?id=<%= comp.getId_computadora() %>" onclick="return confirm('¿Seguro que deseas eliminar esta computadora?');">Eliminar</a>
+            <td>            
+                <a href="../ServletComputadora?accion=eliminar&id=<%= comp.getId_computadora() %>" onclick="return confirm('¿Seguro que deseas eliminar esta computadora?');">Eliminar</a>
             </td>
         </tr>
         <%

@@ -18,7 +18,7 @@
 <body>
     <h2>Registrar Computadora</h2>
 
-    <form action="../ComputadoraServlet" method="post">
+    <form action="../ServletComputadora" method="post">
         <input type="hidden" name="accion" value="registrar">
 
         <label>Nombre de la Computadora:</label>

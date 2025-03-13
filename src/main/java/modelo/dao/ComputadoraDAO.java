@@ -47,6 +47,18 @@ public class ComputadoraDAO {
         }
         return lista;
     }
+    public int obtenerUltimoId() {
+        String sql = "SELECT MAX(id_computadora) AS max_id FROM Computadora";
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            if (rs.next()) {
+                return rs.getInt("max_id");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0; // Si no hay registros, empezamos desde 0
+    }
 
     public boolean eliminarComputadora(int id) {
         String sql = "DELETE FROM Computadora WHERE id_computadora = ?";

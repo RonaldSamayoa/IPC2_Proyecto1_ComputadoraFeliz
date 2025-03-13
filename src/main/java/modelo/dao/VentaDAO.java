@@ -49,6 +49,19 @@ public class VentaDAO {
         return lista;
     }
 
+    public int obtenerUltimoId() {
+        String sql = "SELECT MAX(id_venta) AS max_id FROM Venta";
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            if (rs.next()) {
+                return rs.getInt("max_id");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0; // Si no hay registros, empezamos desde 0
+    }
+    
     public boolean eliminarVenta(int id) {
         String sql = "DELETE FROM Venta WHERE id_venta = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {

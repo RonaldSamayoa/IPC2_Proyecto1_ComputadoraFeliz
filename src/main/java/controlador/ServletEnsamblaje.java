@@ -1,9 +1,8 @@
 package controlador;
 
-import modelo.Venta;
-import modelo.dao.VentaDAO;
+import modelo.Ensamblaje;
+import modelo.dao.EnsamblajeDAO;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,11 +10,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/ServletVenta")
-public class ServletVenta extends HttpServlet {
+@WebServlet("/ServletEnsamblaje")
+public class ServletEnsamblaje extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    private VentaDAO ventaDAO = new VentaDAO();
+    private EnsamblajeDAO ensamblajeDAO = new EnsamblajeDAO();
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -23,14 +22,14 @@ public class ServletVenta extends HttpServlet {
 
         try {
             if (accion == null) {
-                listarVentas(request, response);
+                listarEnsamblajes(request, response);
             } else {
                 switch (accion) {
                     case "eliminar":
-                        eliminarVenta(request, response);
+                        eliminarEnsamblaje(request, response);
                         break;
                     default:
-                        listarVentas(request, response);
+                        listarEnsamblajes(request, response);
                 }
             }
         } catch (Exception e) {
@@ -45,7 +44,7 @@ public class ServletVenta extends HttpServlet {
 
         try {
             if ("registrar".equals(accion)) {
-                registrarVenta(request, response);
+                registrarEnsamblaje(request, response);
             } else {
                 response.sendRedirect("jsp/error.jsp?mensaje=Accion no reconocida");
             }
@@ -55,47 +54,43 @@ public class ServletVenta extends HttpServlet {
         }
     }
 
-    private void listarVentas(HttpServletRequest request, HttpServletResponse response)
+    private void listarEnsamblajes(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        List<Venta> listaVentas = ventaDAO.obtenerVentas();
-        request.setAttribute("listaVentas", listaVentas);
-        request.getRequestDispatcher("jsp/listarVentas.jsp").forward(request, response);
+        List<Ensamblaje> listaEnsamblajes = ensamblajeDAO.obtenerEnsamblajes();
+        request.setAttribute("listaEnsamblajes", listaEnsamblajes);
+        request.getRequestDispatcher("jsp/listarEnsamblajes.jsp").forward(request, response);
     }
 
-    private void registrarVenta(HttpServletRequest request, HttpServletResponse response)
+    private void registrarEnsamblaje(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // Obtener los parámetros del formulario
-        String fechaVentaStr = request.getParameter("fecha_venta");
-        double totalVenta = Double.parseDouble(request.getParameter("total_venta"));
-        int idCliente = Integer.parseInt(request.getParameter("id_cliente"));
-        int idUsuario = Integer.parseInt(request.getParameter("id_usuario"));
-
-        // Convertir fecha de String a LocalDate
-        LocalDate fechaVenta = LocalDate.parse(fechaVentaStr); // Formato esperado: yyyy-MM-dd
+        int idComputadora = Integer.parseInt(request.getParameter("id_computadora"));
+        int idComponente = Integer.parseInt(request.getParameter("id_componente"));
+        int cantidad = Integer.parseInt(request.getParameter("cantidad"));
 
         // Obtener el último ID utilizado y sumarle 1
-        int nuevoId = ventaDAO.obtenerUltimoId() + 1;
+        int nuevoId = ensamblajeDAO.obtenerUltimoId() + 1;
 
-        // Crear el objeto Venta
-        Venta venta = new Venta(nuevoId, fechaVenta, totalVenta, idCliente, idUsuario);
-        boolean registrado = ventaDAO.agregarVenta(venta);
+        // Crear el objeto Ensamblaje
+        Ensamblaje ensamblaje = new Ensamblaje(nuevoId, idComputadora, idComponente, cantidad);
+        boolean registrado = ensamblajeDAO.agregarEnsamblaje(ensamblaje);
 
         if (registrado) {
-            response.sendRedirect("ServletVenta");
+            response.sendRedirect("ServletEnsamblaje");
         } else {
-            response.sendRedirect("jsp/error.jsp?mensaje=No se pudo registrar la venta");
+            response.sendRedirect("jsp/error.jsp?mensaje=No se pudo registrar el ensamblaje");
         }
     }
 
-    private void eliminarVenta(HttpServletRequest request, HttpServletResponse response)
+    private void eliminarEnsamblaje(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
-        boolean eliminado = ventaDAO.eliminarVenta(id);
+        boolean eliminado = ensamblajeDAO.eliminarEnsamblaje(id);
 
         if (eliminado) {
-            response.sendRedirect("ServletVenta");
+            response.sendRedirect("ServletEnsamblaje");
         } else {
-            response.sendRedirect("jsp/error.jsp?mensaje=No se pudo eliminar la venta");
+            response.sendRedirect("jsp/error.jsp?mensaje=No se pudo eliminar el ensamblaje");
         }
     }
 }

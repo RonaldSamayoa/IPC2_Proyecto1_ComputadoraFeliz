@@ -40,7 +40,6 @@
             <td><%= venta.getId_cliente() %></td>
             <td><%= venta.getId_usuario() %></td>
             <td>
-                <a href="editarVenta.jsp?id=<%= venta.getId_venta() %>">Editar</a> |
                 <a href="eliminarVenta?id=<%= venta.getId_venta() %>" onclick="return confirm('¿Seguro que deseas eliminar esta venta?');">Eliminar</a>
             </td>
         </tr>

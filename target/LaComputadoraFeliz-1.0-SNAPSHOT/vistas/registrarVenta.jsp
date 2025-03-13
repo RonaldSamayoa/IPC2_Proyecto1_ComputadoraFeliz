@@ -5,9 +5,6 @@
 --%>
 
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="modelo.Venta" %>
-<%@ page import="modelo.dao.VentaDAO" %>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,7 +15,7 @@
 <body>
     <h2>Registrar Venta</h2>
 
-    <form action="../VentaServlet" method="post">
+    <form action="../ServletVenta" method="post">
         <input type="hidden" name="accion" value="registrar">
         
         <label>Fecha de Venta:</label>
@@ -40,4 +37,3 @@
     <a href="listarVentas.jsp">Volver a la lista de ventas</a>
 </body>
 </html>
-

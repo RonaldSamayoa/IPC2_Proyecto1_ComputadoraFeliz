@@ -16,7 +16,7 @@
 <body>
     <h2>Registrar Usuario</h2>
     
-    <form action="ServletUsuario" method="post">
+    <form action="../controlador/ServletUsuario" method="post">
         <input type="hidden" name="accion" value="registrar">
         
         <label>Nombre de Usuario:</label>

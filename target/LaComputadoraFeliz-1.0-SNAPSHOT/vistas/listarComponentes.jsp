@@ -38,8 +38,7 @@
             <td><%= comp.getCosto() %></td>
             <td><%= comp.getCantidad() %></td>
             <td>
-                <a href="editarComponente.jsp?id=<%= comp.getId_componente() %>">Editar</a> |
-                <a href="eliminarComponente?id=<%= comp.getId_componente() %>" onclick="return confirm('¿Seguro que deseas eliminar este componente?');">Eliminar</a>
+                <a href="../ServletComponente?accion=eliminar&id=<%= comp.getId_componente() %>" onclick="return confirm('¿Seguro que deseas eliminar este componente?');">Eliminar</a>
             </td>
         </tr>
         <%

@@ -18,7 +18,7 @@
 <body>
     <h2>Registrar Componente</h2>
 
-    <form action="../ComponenteServlet" method="post">
+    <form action="../ServletComponente" method="post">
         <input type="hidden" name="accion" value="registrar">
         
         <label>Nombre del Componente:</label>
