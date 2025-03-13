@@ -1,17 +1,18 @@
 package modelo;
+import java.time.LocalDate;
 
 public class Computadora {
     private int id_computadora;
     private String nombre_computadora;
     private double precio_venta;
-    private String fecha_ensamblaje;
+    private LocalDate fecha_ensamblaje;
     private int id_usuario;  // FK: Usuario que ensambló la computadora
 
     // Constructor vacío
     public Computadora() {}
 
     // Constructor con parámetros
-    public Computadora(int id_computadora, String nombre_computadora, double precio_venta, String fecha_ensamblaje, int id_usuario) {
+    public Computadora(int id_computadora, String nombre_computadora, double precio_venta, LocalDate fecha_ensamblaje, int id_usuario) {
         this.id_computadora = id_computadora;
         this.nombre_computadora = nombre_computadora;
         this.precio_venta = precio_venta;
@@ -48,11 +49,11 @@ public class Computadora {
     }
 
 
-    public String getFecha_ensamblaje() {
+    public LocalDate getFecha_ensamblaje() {
         return fecha_ensamblaje;
     }
 
-    public void setFecha_ensamblaje(String fecha_ensamblaje) {
+    public void setFecha_ensamblaje(LocalDate fecha_ensamblaje) {
         this.fecha_ensamblaje = fecha_ensamblaje;
     }
 

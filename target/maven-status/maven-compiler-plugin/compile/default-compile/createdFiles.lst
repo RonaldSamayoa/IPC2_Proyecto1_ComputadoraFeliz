@@ -1,6 +1,7 @@
 util/PruebaConexion.class
 modelo/Cliente.class
 modelo/Venta.class
+controlador/ServletPruebaConexion.class
 modelo/dao/EnsamblajeDAO.class
 controlador/ServletCliente.class
 controlador/ServletUsuario.class

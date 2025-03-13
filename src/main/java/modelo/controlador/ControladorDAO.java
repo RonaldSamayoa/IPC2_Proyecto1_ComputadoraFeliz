@@ -38,9 +38,7 @@ public class ControladorDAO {
     public boolean agregarUsuario(Usuario usuario) {
         return usuarioDAO.agregarUsuario(usuario);
     }
-    public Usuario buscarUsuario(int id) {
-        return usuarioDAO.buscarUsuarioPorId(id);
-    }
+    
     public List<Usuario> obtenerUsuarios() {
         return usuarioDAO.obtenerUsuarios();
     }
@@ -52,9 +50,7 @@ public class ControladorDAO {
     public boolean agregarCliente(Cliente cliente) {
         return clienteDAO.agregarCliente(cliente);
     }
-    public Cliente buscarCliente(int id) {
-        return clienteDAO.buscarClientePorId(id);
-    }
+    
     public List<Cliente> obtenerClientes() {
         return clienteDAO.obtenerClientes();
     }
@@ -66,9 +62,7 @@ public class ControladorDAO {
     public boolean agregarComputadora(Computadora computadora) {
         return computadoraDAO.agregarComputadora(computadora);
     }
-    public Computadora buscarComputadora(int id) {
-        return computadoraDAO.buscarComputadoraPorId(id);
-    }
+    
     public List<Computadora> obtenerComputadoras() {
         return computadoraDAO.obtenerComputadoras();
     }
@@ -80,12 +74,11 @@ public class ControladorDAO {
     public boolean agregarComponente(Componente componente) {
         return componenteDAO.agregarComponente(componente);
     }
-    public Componente buscarComponente(int id) {
-        return componenteDAO.buscarComponentePorId(id);
-    }
+    
     public List<Componente> obtenerComponentes() {
         return componenteDAO.obtenerComponentes();
     }
+    
     public boolean eliminarComponente(int id) {
         return componenteDAO.eliminarComponente(id);
     }

@@ -1,51 +1,59 @@
 package modelo.dao;
 import modelo.Componente;
+import util.ConexionBD;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ComponenteDAO {
-    private List<Componente> componentes;
+    private Connection conn;
 
     public ComponenteDAO() {
-        this.componentes = new ArrayList<>();
+        this.conn = ConexionBD.getConnection();
     }
 
-    // Verificar si el ID ya existe
-    private boolean existeId(int id) {
-        for (Componente componente : componentes) {
-            if (componente.getId_componente() == id) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    // Agregar componente manualmente con verificación de ID único
     public boolean agregarComponente(Componente componente) {
-        if (!existeId(componente.getId_componente())) {
-            componentes.add(componente);
-            return true;
+        String sql = "INSERT INTO Componente (id_componente, nombre_componente, costo, cantidad) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, componente.getId_componente());
+            stmt.setString(2, componente.getNombre_componente());
+            stmt.setDouble(3, componente.getCosto());
+            stmt.setInt(4, componente.getCantidad());
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
-        return false;
     }
 
-    // Obtener todos los componentes
     public List<Componente> obtenerComponentes() {
-        return componentes;
-    }
+        List<Componente> lista = new ArrayList<>();
+        String sql = "SELECT * FROM Componente";
 
-    // Buscar componente por ID
-    public Componente buscarComponentePorId(int id) {
-        for (Componente componente : componentes) {
-            if (componente.getId_componente() == id) {
-                return componente;
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                lista.add(new Componente(
+                        rs.getInt("id_componente"),
+                        rs.getString("nombre_componente"),
+                        rs.getDouble("costo"),
+                        rs.getInt("cantidad")
+                ));
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return null;
+        return lista;
     }
 
-    // Eliminar componente por ID
     public boolean eliminarComponente(int id) {
-        return componentes.removeIf(componente -> componente.getId_componente() == id);
+        String sql = "DELETE FROM Componente WHERE id_componente = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

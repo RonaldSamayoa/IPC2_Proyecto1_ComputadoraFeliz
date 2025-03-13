@@ -13,6 +13,7 @@
 /home/ronald/NetBeansProjects/LaComputadoraFeliz/src/main/java/modelo/Venta.java
 /home/ronald/NetBeansProjects/LaComputadoraFeliz/src/main/java/modelo/Cliente.java
 /home/ronald/NetBeansProjects/LaComputadoraFeliz/src/main/java/controlador/RegistrarComponenteServlet.java
+/home/ronald/NetBeansProjects/LaComputadoraFeliz/src/main/java/controlador/ServletPruebaConexion.java
 /home/ronald/NetBeansProjects/LaComputadoraFeliz/src/main/java/modelo/Usuario.java
 /home/ronald/NetBeansProjects/LaComputadoraFeliz/src/main/java/modelo/controlador/ControladorDAO.java
 /home/ronald/NetBeansProjects/LaComputadoraFeliz/src/main/java/modelo/dao/ComputadoraDAO.java

@@ -1,51 +1,61 @@
 package modelo.dao;
 import modelo.Computadora;
+import util.ConexionBD;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ComputadoraDAO {
-    private List<Computadora> computadoras;
+    private Connection conn;
 
     public ComputadoraDAO() {
-        this.computadoras = new ArrayList<>();
+        this.conn = ConexionBD.getConnection();
     }
 
-    // Verificar si el ID ya existe
-    private boolean existeId(int id) {
-        for (Computadora computadora : computadoras) {
-            if (computadora.getId_computadora() == id) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    // Agregar computadora manualmente con verificación de ID único
     public boolean agregarComputadora(Computadora computadora) {
-        if (!existeId(computadora.getId_computadora())) {
-            computadoras.add(computadora);
-            return true;
+        String sql = "INSERT INTO Computadora (id_computadora, nombre_computadora, precio_venta, fecha_ensamblaje, id_usuario) VALUES (?, ?, ?, ?, ?)";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, computadora.getId_computadora());
+            stmt.setString(2, computadora.getNombre_computadora());
+            stmt.setDouble(3, computadora.getPrecio_venta());
+            stmt.setDate(4, Date.valueOf(computadora.getFecha_ensamblaje()));
+            stmt.setInt(5, computadora.getId_usuario());
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
-        return false;
     }
 
-    // Obtener todas las computadoras
     public List<Computadora> obtenerComputadoras() {
-        return computadoras;
-    }
+        List<Computadora> lista = new ArrayList<>();
+        String sql = "SELECT * FROM Computadora";
 
-    // Buscar computadora por ID
-    public Computadora buscarComputadoraPorId(int id) {
-        for (Computadora computadora : computadoras) {
-            if (computadora.getId_computadora() == id) {
-                return computadora;
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                lista.add(new Computadora(
+                        rs.getInt("id_computadora"),
+                        rs.getString("nombre_computadora"),
+                        rs.getDouble("precio_venta"),
+                        rs.getDate("fecha_ensamblaje").toLocalDate(),
+                        rs.getInt("id_usuario")
+                ));
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return null;
+        return lista;
     }
 
-    // Eliminar computadora por ID
     public boolean eliminarComputadora(int id) {
-        return computadoras.removeIf(computadora -> computadora.getId_computadora() == id);
+        String sql = "DELETE FROM Computadora WHERE id_computadora = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

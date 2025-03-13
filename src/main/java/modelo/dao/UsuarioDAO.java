@@ -1,51 +1,62 @@
 package modelo.dao;
+
 import modelo.Usuario;
+import util.ConexionBD;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class UsuarioDAO {
-    private List<Usuario> usuarios;
+    private Connection conn;
 
     public UsuarioDAO() {
-        this.usuarios = new ArrayList<>();
+        this.conn = ConexionBD.getConnection();
     }
 
-    // Método para verificar si un ID ya existe
-    private boolean existeId(int id) {
-        for (Usuario usuario : usuarios) {
-            if (usuario.getId_usuario() == id) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    // Método para agregar un usuario manualmente con verificación de ID único
     public boolean agregarUsuario(Usuario usuario) {
-        if (!existeId(usuario.getId_usuario())) {
-            usuarios.add(usuario);
-            return true; // Usuario agregado correctamente
+        String sql = "INSERT INTO Usuario (nombre_usuario, password, rol) VALUES (?, ?, ?)";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, usuario.getNombre_usuario());
+            stmt.setString(2, usuario.getPassword());
+            stmt.setString(3, usuario.getRol());
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
-        return false; // No se agregó porque el ID ya existe
     }
 
-    // Método para obtener todos los usuarios
     public List<Usuario> obtenerUsuarios() {
-        return usuarios;
-    }
+        List<Usuario> lista = new ArrayList<>();
+        String sql = "SELECT * FROM Usuario";
 
-    // Método para buscar un usuario por ID
-    public Usuario buscarUsuarioPorId(int id) {
-        for (Usuario usuario : usuarios) {
-            if (usuario.getId_usuario() == id) {
-                return usuario;
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                lista.add(new Usuario(
+                        rs.getInt("id_usuario"),
+                        rs.getString("nombre_usuario"),
+                        rs.getString("password"),
+                        rs.getString("rol")
+                ));
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return null; // Si no se encuentra
+        return lista;
     }
 
-    // Método para eliminar un usuario por ID
     public boolean eliminarUsuario(int id) {
-        return usuarios.removeIf(usuario -> usuario.getId_usuario() == id);
+        String sql = "DELETE FROM Usuario WHERE id_usuario = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
+
+
+

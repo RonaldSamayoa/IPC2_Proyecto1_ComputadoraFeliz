@@ -1,51 +1,60 @@
 package modelo.dao;
+import java.time.LocalDate;
 import modelo.Devolucion;
+import util.ConexionBD;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DevolucionDAO {
-    private List<Devolucion> devoluciones;
+    private Connection conn;
 
     public DevolucionDAO() {
-        this.devoluciones = new ArrayList<>();
+        this.conn = ConexionBD.getConnection();
     }
 
-    // Verificar si el ID ya existe
-    private boolean existeId(int id) {
-        for (Devolucion devolucion : devoluciones) {
-            if (devolucion.getId_devolucion() == id) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    // Agregar devolución manualmente con verificación de ID único
     public boolean agregarDevolucion(Devolucion devolucion) {
-        if (!existeId(devolucion.getId_devolucion())) {
-            devoluciones.add(devolucion);
-            return true;
+        String sql = "INSERT INTO Devolucion (id_devolucion, fecha_devolucion, perdida, id_venta) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, devolucion.getId_devolucion());
+            stmt.setDate(2, Date.valueOf(devolucion.getFecha_devolucion()));
+            stmt.setDouble(3, devolucion.getPerdida());
+            stmt.setInt(4, devolucion.getId_venta());
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
-        return false;
     }
 
-    // Obtener todas las devoluciones
     public List<Devolucion> obtenerDevoluciones() {
-        return devoluciones;
-    }
+        List<Devolucion> lista = new ArrayList<>();
+        String sql = "SELECT * FROM Devolucion";
 
-    // Buscar devolución por ID
-    public Devolucion buscarDevolucionPorId(int id) {
-        for (Devolucion devolucion : devoluciones) {
-            if (devolucion.getId_devolucion() == id) {
-                return devolucion;
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                lista.add(new Devolucion(
+                        rs.getInt("id_devolucion"),
+                        rs.getDate("fecha_devolucion").toLocalDate(),
+                        rs.getDouble("perdida"),
+                        rs.getInt("id_venta")
+                ));
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return null;
+        return lista;
     }
 
-    // Eliminar devolución por ID
     public boolean eliminarDevolucion(int id) {
-        return devoluciones.removeIf(devolucion -> devolucion.getId_devolucion() == id);
+        String sql = "DELETE FROM Devolucion WHERE id_devolucion = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

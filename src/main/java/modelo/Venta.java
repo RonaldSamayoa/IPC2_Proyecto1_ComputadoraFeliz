@@ -1,8 +1,9 @@
 package modelo;
+import java.time.LocalDate;
 
 public class Venta {
     private int id_venta;
-    private String fecha_venta;
+    private LocalDate fecha_venta;
     private double total_venta;
     private int id_cliente;  // FK: Cliente que realizó la compra
     private int id_usuario;  // FK: Usuario que registró la venta
@@ -11,7 +12,7 @@ public class Venta {
     public Venta() {}
 
     // Constructor con parámetros
-    public Venta(int id_venta, String fecha_venta, double total_venta, int id_cliente, int id_usuario) {
+    public Venta(int id_venta, LocalDate fecha_venta, double total_venta, int id_cliente, int id_usuario) {
         this.id_venta = id_venta;
         this.fecha_venta = fecha_venta;
         this.total_venta = total_venta;
@@ -28,11 +29,11 @@ public class Venta {
         this.id_venta = id_venta;
     }
 
-    public String getFecha_venta() {
+    public LocalDate getFecha_venta() {
         return fecha_venta;
     }
 
-    public void setFecha_venta(String fecha_venta) {
+    public void setFecha_venta(LocalDate fecha_venta) {
         this.fecha_venta = fecha_venta;
     }
 

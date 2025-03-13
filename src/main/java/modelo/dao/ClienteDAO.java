@@ -1,51 +1,62 @@
 package modelo.dao;
+
 import modelo.Cliente;
+import util.ConexionBD;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ClienteDAO {
-    private List<Cliente> clientes;
+    private Connection conn;
 
     public ClienteDAO() {
-        this.clientes = new ArrayList<>();
+        this.conn = ConexionBD.getConnection();
     }
 
-    // Verificar si el ID ya existe
-    private boolean existeId(int id) {
-        for (Cliente cliente : clientes) {
-            if (cliente.getId_cliente() == id) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    // Agregar cliente manualmente con verificación de ID único
     public boolean agregarCliente(Cliente cliente) {
-        if (!existeId(cliente.getId_cliente())) {
-            clientes.add(cliente);
-            return true;
+        String sql = "INSERT INTO Cliente (id_cliente, nit, nombre, direccion) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, cliente.getId_cliente());
+            stmt.setString(2, cliente.getNit());
+            stmt.setString(3, cliente.getNombre());
+            stmt.setString(4, cliente.getDireccion());
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
-        return false;
     }
 
-    // Obtener todos los clientes
     public List<Cliente> obtenerClientes() {
-        return clientes;
-    }
+        List<Cliente> lista = new ArrayList<>();
+        String sql = "SELECT * FROM Cliente";
 
-    // Buscar cliente por ID
-    public Cliente buscarClientePorId(int id) {
-        for (Cliente cliente : clientes) {
-            if (cliente.getId_cliente() == id) {
-                return cliente;
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                lista.add(new Cliente(
+                        rs.getInt("id_cliente"),
+                        rs.getString("nit"),
+                        rs.getString("nombre"),
+                        rs.getString("direccion")
+                ));
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return null;
+        return lista;
     }
 
-    // Eliminar cliente por ID
     public boolean eliminarCliente(int id) {
-        return clientes.removeIf(cliente -> cliente.getId_cliente() == id);
+        String sql = "DELETE FROM Cliente WHERE id_cliente = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
+
+

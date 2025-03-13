@@ -1,8 +1,8 @@
 package modelo;
-
+import java.time.LocalDate;
 public class Devolucion {
     private int id_devolucion;
-    private String fecha_devolucion;
+    private LocalDate fecha_devolucion;
     private double perdida;
     private int id_venta;  // FK: Venta asociada a la devolución
 
@@ -10,7 +10,7 @@ public class Devolucion {
     public Devolucion() {}
 
     // Constructor con parámetros
-    public Devolucion(int id_devolucion, String fecha_devolucion, double perdida, int id_venta) {
+    public Devolucion(int id_devolucion, LocalDate fecha_devolucion, double perdida, int id_venta) {
         this.id_devolucion = id_devolucion;
         this.fecha_devolucion = fecha_devolucion;
         this.perdida = perdida;
@@ -26,11 +26,11 @@ public class Devolucion {
         this.id_devolucion = id_devolucion;
     }
 
-    public String getFecha_devolucion() {
+    public LocalDate getFecha_devolucion() {
         return fecha_devolucion;
     }
 
-    public void setFecha_devolucion(String fecha_devolucion) {
+    public void setFecha_devolucion(LocalDate fecha_devolucion) {
         this.fecha_devolucion = fecha_devolucion;
     }
 

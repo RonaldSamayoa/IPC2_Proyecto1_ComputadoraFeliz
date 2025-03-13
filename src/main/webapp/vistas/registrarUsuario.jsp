@@ -5,8 +5,6 @@
 --%>
 
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="modelo.Usuario" %>
-<%@ page import="modelo.dao.UsuarioDAO" %>
 
 <!DOCTYPE html>
 <html>
@@ -18,7 +16,7 @@
 <body>
     <h2>Registrar Usuario</h2>
     
-    <form action="../UsuarioServlet" method="post">
+    <form action="ServletUsuario" method="post">
         <input type="hidden" name="accion" value="registrar">
         
         <label>Nombre de Usuario:</label>

@@ -2,6 +2,7 @@ package controlador;
 import modelo.Devolucion;
 import modelo.dao.DevolucionDAO;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -28,8 +29,17 @@ public class ServletDevolucion extends HttpServlet {
             throws ServletException, IOException {
         String accion = request.getParameter("accion");
 
-        if ("registrar".equals(accion)) {
-            registrarDevolucion(request, response);
+        try {
+            if ("registrar".equals(accion)) {
+                registrarDevolucion(request, response);
+            } else {
+                // Acción no reconocida
+                response.sendRedirect("jsp/error.jsp?mensaje=Accion no reconocida");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Redirigir a una página de error en caso de excepción
+            response.sendRedirect("jsp/error.jsp?mensaje=Error en el servidor");
         }
     }
 
@@ -42,13 +52,26 @@ public class ServletDevolucion extends HttpServlet {
 
     private void registrarDevolucion(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String fechaDevolucion = request.getParameter("fecha_devolucion");
+        // Obtener parámetros
+        String fechaDevolucionStr = request.getParameter("fecha_devolucion");
         double perdida = Double.parseDouble(request.getParameter("perdida"));
         int idVenta = Integer.parseInt(request.getParameter("id_venta"));
 
-        Devolucion devolucion = new Devolucion(0, fechaDevolucion, perdida, idVenta);
-        devolucionDAO.agregarDevolucion(devolucion);
+        // Convertir fecha de String a LocalDate
+        LocalDate fechaDevolucion = LocalDate.parse(fechaDevolucionStr); // Formato esperado: yyyy-MM-dd
 
-        response.sendRedirect("ServletDevolucion");
+        // Crear objeto Devolucion
+        Devolucion devolucion = new Devolucion(0, fechaDevolucion, perdida, idVenta);
+
+        // Registrar en la base de datos
+        boolean registrado = devolucionDAO.agregarDevolucion(devolucion);
+
+        if (registrado) {
+            // Redirigir al listado de devoluciones si todo está bien
+            response.sendRedirect("ServletDevolucion");
+        } else {
+            // Redirigir a una página de error si no se pudo registrar
+            response.sendRedirect("jsp/error.jsp?mensaje=No se pudo registrar la devolucion");
+        }
     }
 }

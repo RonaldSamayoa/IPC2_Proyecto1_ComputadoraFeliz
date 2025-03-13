@@ -1,51 +1,64 @@
 package modelo.dao;
+
 import modelo.Venta;
+import util.ConexionBD;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class VentaDAO {
-    private List<Venta> ventas;
+    private Connection conn;
 
     public VentaDAO() {
-        this.ventas = new ArrayList<>();
+        this.conn = ConexionBD.getConnection();
     }
 
-    // Verificar si el ID ya existe
-    private boolean existeId(int id) {
-        for (Venta venta : ventas) {
-            if (venta.getId_venta() == id) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    // Agregar venta manualmente con verificación de ID único
     public boolean agregarVenta(Venta venta) {
-        if (!existeId(venta.getId_venta())) {
-            ventas.add(venta);
-            return true;
+        String sql = "INSERT INTO Venta (id_venta, fecha_venta, total_venta, id_cliente, id_usuario) VALUES (?, ?, ?, ?, ?)";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, venta.getId_venta());
+            stmt.setDate(2, Date.valueOf(venta.getFecha_venta()));
+            stmt.setDouble(3, venta.getTotal_venta());
+            stmt.setInt(4, venta.getId_cliente());
+            stmt.setInt(5, venta.getId_usuario());
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
-        return false;
     }
 
-    // Obtener todas las ventas
     public List<Venta> obtenerVentas() {
-        return ventas;
-    }
+        List<Venta> lista = new ArrayList<>();
+        String sql = "SELECT * FROM Venta";
 
-    // Buscar venta por ID
-    public Venta buscarVentaPorId(int id) {
-        for (Venta venta : ventas) {
-            if (venta.getId_venta() == id) {
-                return venta;
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                lista.add(new Venta(
+                        rs.getInt("id_venta"),
+                        rs.getDate("fecha_venta").toLocalDate(),
+                        rs.getDouble("total_venta"),
+                        rs.getInt("id_cliente"),
+                        rs.getInt("id_usuario")
+                ));
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return null;
+        return lista;
     }
 
-    // Eliminar venta por ID
     public boolean eliminarVenta(int id) {
-        return ventas.removeIf(venta -> venta.getId_venta() == id);
+        String sql = "DELETE FROM Venta WHERE id_venta = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
+
+

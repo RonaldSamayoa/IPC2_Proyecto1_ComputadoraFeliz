@@ -1,51 +1,60 @@
 package modelo.dao;
+
 import modelo.Ensamblaje;
+import util.ConexionBD;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class EnsamblajeDAO {
-    private List<Ensamblaje> ensamblajes;
+    private Connection conn;
 
     public EnsamblajeDAO() {
-        this.ensamblajes = new ArrayList<>();
+        this.conn = ConexionBD.getConnection();
     }
 
-    // Verificar si el ID ya existe
-    private boolean existeId(int id) {
-        for (Ensamblaje ensamblaje : ensamblajes) {
-            if (ensamblaje.getId_ensamblaje() == id) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    // Agregar ensamblaje manualmente con verificación de ID único
     public boolean agregarEnsamblaje(Ensamblaje ensamblaje) {
-        if (!existeId(ensamblaje.getId_ensamblaje())) {
-            ensamblajes.add(ensamblaje);
-            return true;
+        String sql = "INSERT INTO Ensamblaje (id_ensamblaje, id_computadora, id_componente, cantidad) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, ensamblaje.getId_ensamblaje());
+            stmt.setInt(2, ensamblaje.getId_computadora());
+            stmt.setInt(3, ensamblaje.getId_componente());
+            stmt.setInt(4, ensamblaje.getCantidad());
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
-        return false;
     }
 
-    // Obtener todos los ensamblajes
     public List<Ensamblaje> obtenerEnsamblajes() {
-        return ensamblajes;
-    }
+        List<Ensamblaje> lista = new ArrayList<>();
+        String sql = "SELECT * FROM Ensamblaje";
 
-    // Buscar ensamblaje por ID
-    public Ensamblaje buscarEnsamblajePorId(int id) {
-        for (Ensamblaje ensamblaje : ensamblajes) {
-            if (ensamblaje.getId_ensamblaje() == id) {
-                return ensamblaje;
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                lista.add(new Ensamblaje(
+                        rs.getInt("id_ensamblaje"),
+                        rs.getInt("id_computadora"),
+                        rs.getInt("id_componente"),
+                        rs.getInt("cantidad")
+                ));
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return null;
+        return lista;
     }
 
-    // Eliminar ensamblaje por ID
     public boolean eliminarEnsamblaje(int id) {
-        return ensamblajes.removeIf(ensamblaje -> ensamblaje.getId_ensamblaje() == id);
+        String sql = "DELETE FROM Ensamblaje WHERE id_ensamblaje = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
